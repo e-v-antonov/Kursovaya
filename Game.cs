@@ -8,98 +8,128 @@ namespace Kursovaya
 {
     class Game
     {
-        int size { get; set; }
+        public Game(int size)
+        {
+            sizeField = size;
+            InitializtionPlayingField(); 
+        }
 
-        int[,] map;
+        //public int Size { get; set; }  //размер игрового поля
 
-        int space_x, space_y;
+        int sizeField;
+
+        int[,] playingField;    //игровое поле
+
+        private void InitializtionPlayingField()
+        {
+            playingField = new int[sizeField, sizeField];
+        }
+
+        //координаты пустой кнопки
+        int emptyButtonX;
+        int emptyButtonY;
 
         static Random rnd = new Random();
 
-        public Game(int size)
+        //public Game(int size)
+        //{
+        //    if (size < 2) 
+        //        size = 2;
+
+        //    if (size > 5) 
+        //        size = 5;
+
+        //    this.size = size;
+
+        //    map = new int[size, size];
+        //}
+
+        //возвращает номер кнопки по позиции
+        private int ConvertCoordinateToPosition(int x, int y)
         {
-            if (size < 2) 
-                size = 2;
-
-            if (size > 5) 
-                size = 5;
-
-            this.size = size;
-
-            map = new int[size, size];
+            return y * sizeField + x;
         }
 
-        private int to_position(int x, int y)//проверяет table по тому на каком месте находится объект
+        //возвращает координаты в массиве по номеру кнопки
+        private void ConvertPositionToCoordinate(int numberButton, out int x, out int y)
         {
-            return y * size + x;
+            x = numberButton % sizeField;
+            y = numberButton/ sizeField;
         }
 
-        private void position_to(int position, out int x, out int y)
+        //заполняем игровкое поле (массив)
+        public void PreparationPlayingField()//при начале игры присваеваем необходимые значения
         {
-            x = position % size;
-            y = position / size;
+            for (int x = 0; x < sizeField; x++)
+            {
+                for (int y = 0; y < sizeField; y++)
+                {
+                    playingField[x, y] = ConvertCoordinateToPosition(x, y) + 1;
+                }
+            }                    
+
+            emptyButtonX= sizeField - 1;
+            emptyButtonY = sizeField - 1;
+            
+            //устанавливаем пустую кнопку
+            playingField[emptyButtonX, emptyButtonY] = 0;
         }
 
-        public void start()//при начале игры присваеваем необходимые значения
-        {
-            for (int x = 0; x < size; x++)
-                for (int y = 0; y < size; y++)
-                    map[x, y] = to_position(x, y) + 1;
-
-            space_x = size - 1;
-            space_y = size - 1;
-            map[space_x, space_y] = 0;
-        }
-
-        public int get_number(int position)//позиция кноки
-        {
-            int x, y;
-
-            position_to(position, out x, out y);
-
-            if (x < 0 || x >= size) 
-                return 0;
-
-            if (y < 0 || y >= size) 
-                return 0;
-
-            return map[x, y];
-        }
-
-        public void shift(int position)//при нажатии на любую кнопку
+        //возвращает число, которое написано на кнопке
+        public int GetNumberOnButton(int numberButton)
         {
             int x, y;
 
-            position_to(position, out x, out y);
+            ConvertPositionToCoordinate(numberButton, out x, out y);
 
-            if (Math.Abs(space_x - x) + Math.Abs(space_y - y) != 1)
-                return;
+            //проверка от переполнения массива
+            if (x < 0 || x >= sizeField)
+            {
+                return 0;
+            }
 
-            map[space_x, space_y] = map[x, y];
-            map[x, y] = 0;
-            space_x = x;
-            space_y = y;
+            if (y < 0 || y >= sizeField)
+            {
+                return 0;
+            }
+
+            return playingField[x, y];
         }
 
-        public void shift_random()//нажимает рандомное количество раз на кнопки
-        {
-            shift(rnd.Next(0, size * size));
+        //public void shift(int position)//при нажатии на любую кнопку
+        //{
+        //    int x, y;
 
-        }
+        //    position_to(position, out x, out y);
 
-        public bool check_numbers()//проверка на место кнопок
-        {
-            if (!(space_x == size - 1 &&
-                space_y == size - 1))
-                return false;
+        //    if (Math.Abs(space_x - x) + Math.Abs(space_y - y) != 1)
+        //        return;
 
-            for (int x = 0; x < size; x++)
-                for (int y = 0; y < size; y++)
-                    if (!(x == size - 1 && y == size - 1))
-                        if (map[x, y] != to_position(x, y) + 1)
-                            return false;
+        //    map[space_x, space_y] = map[x, y];
+        //    map[x, y] = 0;
+        //    space_x = x;
+        //    space_y = y;
+        //}
 
-            return true;
-        }
+        //public void shift_random()//нажимает рандомное количество раз на кнопки
+        //{
+        //    shift(rnd.Next(0, size * size));
+
+        //}
+
+        //public bool check_numbers()//проверка на место кнопок
+        //{
+        //    if (!(space_x == size - 1 &&
+        //        space_y == size - 1))
+        //        return false;
+
+        //    for (int x = 0; x < size; x++)
+        //        for (int y = 0; y < size; y++)
+        //            if (!(x == size - 1 && y == size - 1))
+        //                if (map[x, y] != to_position(x, y) + 1)
+        //                    return false;
+
+        //    return true;
+        //}
     }
 }
