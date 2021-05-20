@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Kursovaya
 {
@@ -13,8 +9,6 @@ namespace Kursovaya
             sizeField = size;
             InitializtionPlayingField(); 
         }
-
-        //public int Size { get; set; }  //размер игрового поля
 
         int sizeField;
 
@@ -31,30 +25,47 @@ namespace Kursovaya
 
         static Random rnd = new Random();
 
-        //public Game(int size)
-        //{
-        //    if (size < 2) 
-        //        size = 2;
-
-        //    if (size > 5) 
-        //        size = 5;
-
-        //    this.size = size;
-
-        //    map = new int[size, size];
-        //}
-
         //возвращает номер кнопки по позиции
         private int ConvertCoordinateToPosition(int x, int y)
         {
+            if (x < 0)
+            {
+                x = 0;
+            }
+
+            if (x > sizeField - 1)
+            {
+                x = sizeField - 1;
+            }
+
+            if (y < 0)
+            {
+                y = 0;
+            }
+
+            if (y > sizeField - 1)
+            {
+                y = sizeField - 1;
+            }
+
             return y * sizeField + x;
         }
 
         //возвращает координаты в массиве по номеру кнопки
         private void ConvertPositionToCoordinate(int numberButton, out int x, out int y)
         {
-            x = numberButton % sizeField;
-            y = numberButton/ sizeField;
+            if (numberButton < 0)
+            {
+                numberButton = 0;
+            }
+
+            if (numberButton > sizeField * sizeField - 1)
+            {
+                numberButton = sizeField * sizeField - 1;
+            }
+
+            y = numberButton % sizeField;
+            x = numberButton / sizeField;
         }
 
         //заполняем игровкое поле (массив)
@@ -68,7 +79,7 @@ namespace Kursovaya
                 }
             }                    
 
-            emptyButtonX= sizeField - 1;
+            emptyButtonX = sizeField - 1;
             emptyButtonY = sizeField - 1;
             
             //устанавливаем пустую кнопку
@@ -96,40 +107,76 @@ namespace Kursovaya
             return playingField[x, y];
         }
 
-        //public void shift(int position)//при нажатии на любую кнопку
-        //{
-        //    int x, y;
+        public void MoveButton(int numberButton)
+        {
+            int x, y;
 
-        //    position_to(position, out x, out y);
+            ConvertPositionToCoordinate(numberButton, out x, out y);
 
-        //    if (Math.Abs(space_x - x) + Math.Abs(space_y - y) != 1)
-        //        return;
+            //проверка на доступность клетки для перемещения кнопки
+            if (Math.Abs(emptyButtonX - x) + Math.Abs(emptyButtonY - y) != 1)
+            {
+                return;
+            }
 
-        //    map[space_x, space_y] = map[x, y];
-        //    map[x, y] = 0;
-        //    space_x = x;
-        //    space_y = y;
-        //}
+            playingField[emptyButtonX, emptyButtonY] = playingField[x, y];
+            playingField[x, y] = 0;
 
-        //public void shift_random()//нажимает рандомное количество раз на кнопки
-        //{
-        //    shift(rnd.Next(0, size * size));
+            emptyButtonX = x;
+            emptyButtonY = y;
+        }
 
-        //}
+        //перемешивание кнопок перед игрой
+        public void ShufflePlayingField()
+        {
+            int abilityToMove = rnd.Next(0, 4);
+            int x = emptyButtonX;
+            int y = emptyButtonY;
 
-        //public bool check_numbers()//проверка на место кнопок
-        //{
-        //    if (!(space_x == size - 1 &&
-        //        space_y == size - 1))
-        //        return false;
+            switch (abilityToMove)
+            {
+                case 0:
+                    x--;
+                    break;
 
-        //    for (int x = 0; x < size; x++)
-        //        for (int y = 0; y < size; y++)
-        //            if (!(x == size - 1 && y == size - 1))
-        //                if (map[x, y] != to_position(x, y) + 1)
-        //                    return false;
+                case 1:
+                    x++;
+                    break;
 
-        //    return true;
-        //}
+                case 2:
+                    y--;
+                    break;
+
+                case 3:
+                    y++;
+                    break;
+            }
+
+            MoveButton(ConvertCoordinateToPosition(x, y));
+        }
+
+        public bool SuccessfulGame()
+        {
+            if (!(emptyButtonX == sizeField - 1 && emptyButtonY == sizeField - 1))
+            {
+                return false;
+            }
+
+            for (int x = 0; x < sizeField; x++)
+            {
+                for (int y = 0; y < sizeField; y++)
+                {
+                    if (!(x == sizeField - 1 && y == sizeField - 1))
+                    {
+                        if (playingField[x, y] != ConvertCoordinateToPosition(x, y) + 1)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

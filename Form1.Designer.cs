@@ -33,7 +33,9 @@ namespace Kursovaya
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.miResetGame = new System.Windows.Forms.ToolStripMenuItem();
             this.miNewGame = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miGameThree = new System.Windows.Forms.ToolStripMenuItem();
+            this.miGameFour = new System.Windows.Forms.ToolStripMenuItem();
+            this.miGameFive = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,13 +59,11 @@ namespace Kursovaya
             this.mainMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miResetGame,
-            this.miNewGame,
-            this.toolStripMenuItem1});
+            this.miNewGame});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Size = new System.Drawing.Size(800, 28);
             this.mainMenu.TabIndex = 2;
-            this.mainMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mainMenu_ItemClicked);
             // 
             // miResetGame
             // 
@@ -73,15 +73,34 @@ namespace Kursovaya
             // 
             // miNewGame
             // 
+            this.miNewGame.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miGameThree,
+            this.miGameFour,
+            this.miGameFive});
             this.miNewGame.Name = "miNewGame";
             this.miNewGame.Size = new System.Drawing.Size(184, 24);
             this.miNewGame.Text = "Смешать и начать игру";
             // 
-            // toolStripMenuItem1
+            // miGameThree
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(156, 24);
-            this.toolStripMenuItem1.Text = "toolStripMenuItem1";
+            this.miGameThree.Name = "miGameThree";
+            this.miGameThree.Size = new System.Drawing.Size(153, 26);
+            this.miGameThree.Text = "Игра 3х3";
+            this.miGameThree.Click += new System.EventHandler(this.miGameThree_Click);
+            // 
+            // miGameFour
+            // 
+            this.miGameFour.Name = "miGameFour";
+            this.miGameFour.Size = new System.Drawing.Size(153, 26);
+            this.miGameFour.Text = "Игра 4х4";
+            this.miGameFour.Click += new System.EventHandler(this.miGameFour_Click);
+            // 
+            // miGameFive
+            // 
+            this.miGameFive.Name = "miGameFive";
+            this.miGameFive.Size = new System.Drawing.Size(153, 26);
+            this.miGameFive.Text = "Игра 5х5";
+            this.miGameFive.Click += new System.EventHandler(this.miGameFive_Click);
             // 
             // Form1
             // 
@@ -106,7 +125,9 @@ namespace Kursovaya
         private System.Windows.Forms.MenuStrip mainMenu;
         private System.Windows.Forms.ToolStripMenuItem miResetGame;
         private System.Windows.Forms.ToolStripMenuItem miNewGame;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem miGameThree;
+        private System.Windows.Forms.ToolStripMenuItem miGameFour;
+        private System.Windows.Forms.ToolStripMenuItem miGameFive;
     }
 }
 
